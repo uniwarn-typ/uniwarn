@@ -91,6 +91,7 @@ Usage:
 - Namespace keys are stored in `text.features`; choose values that do not collide with real OpenType feature tags. Check https://learn.microsoft.com/en-us/typography/opentype/spec/featurelist before deciding on one.
 - Warnings are enabled by default.
 - The source location reported by Typst will generally point to the warning function internals, not the original call site. Include enough context in your message to make debugging easy.
+- Because of the way typst handles warnings, they are automatically deduped if the code location and the message is the same. If you want to emit it more than just once, you need to change the message.
 
 ## Best practices for package authors
 

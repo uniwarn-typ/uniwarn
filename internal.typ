@@ -1,3 +1,5 @@
+#import "@preview/suiji:0.5.1":
+
 #let seed = (
   "font-warning-seed"
     .codepoints()
@@ -9,6 +11,10 @@
     .codepoints()
     .map(str.to-unicode)
     .fold(seed, (a, b) => calc.rem-euclid((a * 31 + b), calc.pow(2, 31) - 1))
+}
+#let gen-ns(seed) = {
+  let rnd = hash(seed)
+  // let rng = suiji.
 }
 
 #let max-value = calc.pow(2, 32) - 1
@@ -68,10 +74,20 @@
 /// -> content
 #let warning(namespace: "cstm", prefix: "[custom] ", message) = context {
   let rnd = hash(namespace)
-  let message = if text.features.at(namespace, default: rnd) == rnd {
+  let message = () => if text.features.at(namespace, default: rnd) == rnd {
     delete-font-warning + prefix + message
   } else {
     "libertinus serif"
   }
-  set text(font: message)
+  set text(font: message())
+}
+
+#let debug(namespace: "cstm", prefix: "[custom] ", message) = context {
+  let rnd = hash(namespace)
+  let message = () => if text.features.at(namespace, default: rnd) == rnd {
+    message
+  } else {
+    "libertinus serif"
+  }
+  text(font: message(), message())
 }

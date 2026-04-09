@@ -1,1 +1,6 @@
-#import "internal.typ": disable-warnings, enable-warnings, warning
+#import "internal.typ": (
+  disable-warnings, 
+  enable-warnings, 
+  warning,
+  // debug as warning
+)
