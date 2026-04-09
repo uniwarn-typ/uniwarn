@@ -1,18 +1,27 @@
 #import "/lib.typ":*
 #set page(width: auto, height: auto)
-#let my-namespace = "fwrn"
+#let my-namespace = "font-warnings"
 
 #let warning = warning.with(namespace: my-namespace, prefix: "[font-warnings] ")
 
-#context ([debug::] + repr(text.features))
+#context ([debug::] + repr(state(my-namespace, 1).get()))
 
 #warning("This is a warning message from the font-warnings package. It should be visible in the output.")
 
 
-#show: disable-warnings(my-namespace)
-#context ([debug::] + repr(text.features))
+#disable-warnings(my-namespace)
+#context ([debug::] + repr(state(my-namespace, 1).get()))
 #warning("This warning should be disabled and not visible in the output.")
 
-#show: enable-warnings(my-namespace)
-#context ([debug::] + repr(text.features))
+#enable-warnings(my-namespace)
+#context ([debug::] + repr(state(my-namespace, 1).get()))
 #warning("This warning should be enabled again and visible in the output.")
+
+//now once via short bindings
+#disable(my-namespace)
+#context ([debug::] + repr(state(my-namespace, 1).get()))
+#warning("This warning should be disabled and not visible in the output. (short binding)")
+
+#enable(my-namespace)
+#context ([debug::] + repr(state(my-namespace, 1).get()))
+#warning("This warning should be enabled again and visible in the output. (short binding)")
