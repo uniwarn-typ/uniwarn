@@ -18,19 +18,19 @@ Typst currently has no package-level diagnostics hooks. `uniwarn` uses a small `
 If installed as a local package, import from the package root:
 
 ```typst
-#import "@local/uniwarn:0.1.0": warning, disable-warnings, enable-warnings
+#import "@local/uniwarn:0.1.1": warning, disable-warnings, enable-warnings
 ```
 
 Otherwise:
 
 ```typst
-#import "@preview/uniwarn:0.1.0": warning, disable-warnings, enable-warnings
+#import "@preview/uniwarn:0.1.1": warning, disable-warnings, enable-warnings
 ```
 
 ## Quick start
 
 ```typst
-#import "@preview/uniwarn:0.1.0" as uwarn
+#import "@preview/uniwarn:0.1.1" as uwarn
 
 #let ns = "your-package"
 #uwarn.register-namespace(ns) // will panic if already registered by another package
@@ -61,12 +61,13 @@ Emits a warning-like message.
 
 Use `warning.with(...)` to create a package-local warning function with fixed namespace and prefix.
 
-### `register-namespace(namespace)`
+### `register-namespace(namespace, panic:true)`
 
 Registers a namespace and panics if the same namespace has already been registered.
 It is good practice to register your namespace, but not necessary for warnings to work.
 
 - `namespace` (`str`): Your chosen namespace string.
+- `panic` (`bool`): Whether to panic or emit a warning.
 
 Usage:
 
@@ -101,6 +102,7 @@ Usage:
 ## Namespace rules and other Caveats
 
 - Choose a namespace that won't collide with other packages': e.g. your own package-name.
+- Internally we use `'warnings::{namespace}'` as the state key.
 - It is good practice to register your namespace so you can be sure nothing collides. Note that because of the way typst state works, the package that gets imported last will cause the panic, thus it might not be your fault that another package's namespace collides with yours.
 - Warnings are enabled by default.
 - The source location reported by Typst will generally point to the warning function internals, not the original call site. Include enough context in your message to make debugging easy.
@@ -113,7 +115,7 @@ Usage:
 
 ```typst
 //my-package/internals.typ
-#import "@preview/uniwarn:0.1.0": warning, disable-warnings, enable-warnings, register-namespace
+#import "@preview/uniwarn:0.1.1": warning, disable-warnings, enable-warnings, register-namespace
 //register first
 #register-namespace("your-package")
 //use internally
@@ -123,11 +125,11 @@ Usage:
 #let enable-warnings = enable-warnings.with("your-package")
 
 //user-doc
-#import "@preview/your-package:0.1.0" as ypkg
+#import "@preview/your-package:0.1.1" as ypkg
 #ypkg.disable-warnings
 //and users can also disable if they import uniwarn directly
 //but this only works when you choose the namespace to be your packages name. 
-#import "@preview/uniwarn:0.1.0" as warnings
+#import "@preview/uniwarn:0.1.1" as warnings
 #warnings.disable("your-package") 
 ```
 
